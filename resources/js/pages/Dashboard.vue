@@ -79,25 +79,6 @@ import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { debounce } from 'lodash';
 import { onMounted, reactive, ref } from 'vue';
 
-defineProps<{
-    albums: {
-        data: Array<{
-            id: number;
-            song_name: string;
-            artist_name: string;
-            cover_image: string | null;
-            total_votes: number;
-            user_vote: string;
-        }>;
-        current_page: number;
-        last_page: number;
-        per_page: number;
-        total: number;
-    };
-    query: string | '';
-    is_admin: boolean
-}>();
-
 const { user, albums, query } = usePage().props;
 const searchInput = ref<HTMLInputElement | null>(null);
 const form = useForm({
@@ -106,7 +87,7 @@ const form = useForm({
 });
 
 const state = reactive({
-    albums: [...albums.data], // Initialize with the initial albums
+    albums: [...albums.data], 
     current_page: albums.current_page,
     last_page: albums.last_page,
 });

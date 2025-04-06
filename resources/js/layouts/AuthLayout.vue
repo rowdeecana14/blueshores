@@ -21,7 +21,6 @@ import { Link } from '@inertiajs/vue3';
 </script>
 
 <style scoped>
-
 body,
 .app-layout {
     margin: 0;

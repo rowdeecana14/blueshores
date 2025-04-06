@@ -21,24 +21,10 @@
 </template>
 
 <script setup lang="ts">
-import { Link, usePage } from '@inertiajs/vue3';
 import ScrollUp from '@/components/ScrollUp.vue';
+import { Link, usePage } from '@inertiajs/vue3';
 
-interface User {
-    name: string;
-    email: string;
-}
-
-interface Props {
-    user: User;
-}
-
-const props = defineProps<Props>();
 const { user } = usePage().props.auth;
-
-const logout = () => {
-    Inertia.post('/logout');
-};
 </script>
 
 <style scoped>
