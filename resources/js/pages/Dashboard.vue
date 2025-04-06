@@ -96,6 +96,9 @@ const { user, albums, query } = defineProps<{
     };
     query: string | '';
     is_admin: boolean;
+    user: {
+        name: string
+    }
 }>();
 
 const searchInput = ref<HTMLInputElement | null>(null);

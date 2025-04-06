@@ -120,4 +120,11 @@ body,
     flex: 1;
     min-height: 100vh;
 }
+
+@media (max-width: 639px) {
+    .welcome-message {
+        display: none !important;
+    }
+}
+
 </style>

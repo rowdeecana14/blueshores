@@ -79,6 +79,9 @@ const { user, albums, query } = defineProps<{
         total: number;
     };
     query: string | '';
+    user?: {
+        name: string | null
+    }
 }>();
 
 const searchInput = ref<HTMLInputElement | null>(null);
@@ -130,7 +133,7 @@ const clickResetFilters = () => {
 
 // Start of Request Functions
 const fetchAlbums = async () => {
-    form.get(route('dashboard'), {
+    form.get(route('home'), {
         preserveState: true,
         onSuccess: (data) => {
             if (state.current_page > 1) {
