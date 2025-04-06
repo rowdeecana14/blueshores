@@ -61,7 +61,9 @@ const form = useForm({
 
 const login = () => {
     form.post(route('login'), {
-        onFinish: () => form.reset(),
+        onError: (errors ) => {
+            console.log(errors);
+        }
     });
 };
 </script>

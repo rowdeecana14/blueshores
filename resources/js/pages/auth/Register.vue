@@ -89,7 +89,9 @@ const form = useForm({
 
 const register = () => {
     form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
+        onSuccess: () => {
+            console.log("Success");
+        }
     });
 };
 </script>

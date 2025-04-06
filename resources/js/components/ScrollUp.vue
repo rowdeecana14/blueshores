@@ -34,10 +34,9 @@ const handleScroll = () => {
     right: 20px;
     padding: 10px;
     background-color: #007bff;
-    /* Blue color */
     color: white;
     border: none;
-    border-radius: 50%;
+    border-radius: 20%;
     font-size: 18px;
     cursor: pointer;
     display: flex;

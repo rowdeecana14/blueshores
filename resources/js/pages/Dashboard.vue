@@ -460,6 +460,11 @@ button:disabled {
 
 .upvote-btn i,
 .downvote-btn i {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.delete-btn i {
     margin-right: 5px;
 }
 
