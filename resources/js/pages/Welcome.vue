@@ -60,11 +60,27 @@
 
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, useForm, usePage } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import { debounce } from 'lodash';
 import { onMounted, reactive, ref } from 'vue';
 
-const { user, albums, query } = usePage().props;
+const { user, albums, query } = defineProps<{
+    albums: {
+        data: Array<{
+            id: number;
+            song_name: string;
+            artist_name: string;
+            cover_image: string | null;
+            total_votes: number;
+        }>;
+        current_page: number;
+        last_page: number;
+        per_page: number;
+        total: number;
+    };
+    query: string | '';
+}>();
+
 const searchInput = ref<HTMLInputElement | null>(null);
 const form = useForm({
     query: query || '',
