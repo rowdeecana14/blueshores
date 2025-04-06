@@ -30,6 +30,7 @@ class HomeController extends Controller
             ->paginate($pagination);
 
         return Inertia::render('Welcome', [
+            'pagination' => $pagination,
             'query' => $query ?? '',
             'albums' => $albums,
         ]);

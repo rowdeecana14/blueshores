@@ -40,6 +40,7 @@ class AlbumController extends Controller
             ->paginate($pagination);
 
         return Inertia::render('Dashboard', [
+            'pagination' => $pagination,
             'user' => auth()->user(),
             'is_admin' => $is_admin,
             'query' => $query ?? '',

@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="albums-container" v-else>
-                    <div v-for="album in state.albums" :key="album.id" class="album-card">
+                    <div v-for="(album, index) in state.albums" :key="album.id" class="album-card" :class="'album-id-' + (index + 1)">
                         <img :src="album.cover_image || '/default-cover.jpg'" alt="Album Cover" class="album-image" />
                         <div class="album-info">
                             <h2>{{ album.song_name }}</h2>
@@ -65,7 +65,7 @@
                 </div>
 
                 <!-- Load More Button -->
-                <div v-if="state.current_page < state.last_page" class="load-more-container">
+                <div v-if="state.current_page < state.last_page && state.albums.length > 0" class="load-more-container">
                     <button @click="clickLoadMore" class="load-more-button">Load More</button>
                 </div>
             </div>
@@ -77,9 +77,9 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { debounce } from 'lodash';
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, onUpdated, reactive, ref } from 'vue';
 
-const { user, albums, query } = defineProps<{
+const { user, albums, query, pagination, is_admin } = defineProps<{
     albums: {
         data: Array<{
             id: number;
@@ -96,9 +96,10 @@ const { user, albums, query } = defineProps<{
     };
     query: string | '';
     is_admin: boolean;
+    pagination: number;
     user: {
-        name: string
-    }
+        name: string;
+    };
 }>();
 
 const searchInput = ref<HTMLInputElement | null>(null);
@@ -111,7 +112,11 @@ const state = reactive({
     albums: [...albums.data],
     current_page: albums.current_page,
     last_page: albums.last_page,
+    total_click_load_more: 1,
+    is_load_more_click: false,
 });
+
+const LOAD_MORE_INCREMENT = 1;
 
 onMounted(() => {
     if (searchInput.value) {
@@ -119,31 +124,61 @@ onMounted(() => {
     }
 });
 
+onUpdated(async () => {
+    setTimeout(() => {
+        if (!state.is_load_more_click) {
+            return;
+        }
+
+        const id = (state.total_click_load_more - 1) * pagination + LOAD_MORE_INCREMENT;
+        const newAlbumElement = document.querySelector(`.album-id-${id}`);
+
+        if (newAlbumElement) {
+            newAlbumElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'end',
+                inline: 'nearest',
+            });
+        }
+
+        state.is_load_more_click = false;
+    }, 500);
+});
+
 // Start of Events
 const clickSearch = async () => {
     state.albums = [];
     state.current_page = 1;
+    state.total_click_load_more = 1;
+    state.is_load_more_click = false;
     await fetchAlbums();
 };
 
 const debounceSearch = debounce(async () => {
     state.albums = [];
     state.current_page = 1;
+    state.total_click_load_more = 1;
+    state.is_load_more_click = false;
     await fetchAlbums();
 }, 1000);
 
-const clickLoadMore = () => {
+const clickLoadMore = async () => {
     if (state.current_page < state.last_page) {
         state.current_page = state.current_page + 1;
         form.page = state.current_page;
-        fetchAlbums();
+        state.total_click_load_more += 1;
+        state.is_load_more_click = true;
+        await fetchAlbums();
     }
 };
 
 const clickResetFilters = () => {
     form.query = '';
     form.page = 1;
+    state.albums = [];
     state.current_page = 1;
+    state.total_click_load_more = 1;
+    state.is_load_more_click = false;
     fetchAlbums();
 };
 
@@ -157,7 +192,9 @@ const clickVote = async (type: string, album_id: number) => {
 };
 
 const clickDeleteAlbum = async (album_id: number) => {
-    await submitDeleteAlbum(album_id);
+    if (window.confirm('Are you sure you want to delete this album?')) {
+        await submitDeleteAlbum(album_id);
+    }
 };
 // End of Events
 

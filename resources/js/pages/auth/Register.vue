@@ -90,8 +90,8 @@ const form = useForm({
 const register = () => {
     form.post(route('register'), {
         onSuccess: () => {
-            console.log("Success");
-        }
+            console.log('Success');
+        },
     });
 };
 </script>

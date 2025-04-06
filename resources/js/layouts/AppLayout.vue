@@ -118,7 +118,6 @@ body,
     padding: 20px;
     background-color: white;
     flex: 1;
-    min-height: 100vh;
 }
 
 @media (max-width: 639px) {
@@ -126,5 +125,4 @@ body,
         display: none !important;
     }
 }
-
 </style>
