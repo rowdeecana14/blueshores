@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Enums\Album\Active;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Album>
@@ -21,7 +21,7 @@ class AlbumFactory extends Factory
             'user_id' => 1,
             'song_name' => $this->faker->sentence(3),
             'artist_name' => $this->faker->name(),
-            'cover_image' => 'https://placehold.co/600x400?text=' . $this->faker->randomElement([
+            'cover_image' => 'https://placehold.co/600x400?text='.$this->faker->randomElement([
                 'Classic+Rock',
                 'Jazz+Vibes',
                 'Pop+Hits',
@@ -31,7 +31,7 @@ class AlbumFactory extends Factory
                 'Alternative+Energy',
                 'Blues+Groove',
                 'Folk+Melodies',
-                'Electronic+Dreams'
+                'Electronic+Dreams',
             ]),
             'active' => Active::YES,
         ];

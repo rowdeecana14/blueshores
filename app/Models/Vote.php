@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\VoteType;
 use Illuminate\Database\Eloquent\Model;
 
 class Vote extends Model
@@ -13,7 +12,8 @@ class Vote extends Model
         'vote',
     ];
 
-    public function album(){
+    public function album()
+    {
         return $this->belongsTo(Album::class);
     }
 }

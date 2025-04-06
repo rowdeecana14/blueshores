@@ -2,12 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Enums\User\Active;
-use App\Enums\User\Role;
-use App\Enums\User\Status;
+use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
 {

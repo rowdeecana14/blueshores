@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Album\Active;
+use App\Models\Album;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Album;
 use Inertia\Response;
-use App\Enums\Album\Active;
-use App\Enums\User\Role;
 
 class HomeController extends Controller
 {
@@ -26,7 +25,7 @@ class HomeController extends Controller
             ->orderBy('total_votes', 'desc')
             ->orderBy('song_name', 'asc')
             ->when($query, function ($queryBuilder) use ($query) {
-                return $queryBuilder->where('song_name', 'like', '%' . $query . '%');
+                return $queryBuilder->where('song_name', 'like', '%'.$query.'%');
             })
             ->paginate($pagination);
 

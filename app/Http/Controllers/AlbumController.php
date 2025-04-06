@@ -4,16 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Enums\Album\Active;
 use App\Enums\User\Role;
-use Illuminate\Http\Request;
+use App\Enums\Vote\VoteType;
 use App\Models\Album;
+use App\Models\Vote;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Models\Vote;
-use App\Enums\Vote\VoteType;
 
 class AlbumController extends Controller
 {
-
     public function index(Request $request): Response
     {
         $auth = auth()->user();
@@ -36,7 +35,7 @@ class AlbumController extends Controller
             ->orderBy('total_votes', 'desc')
             ->orderBy('song_name', 'asc')
             ->when($query, function ($queryBuilder) use ($query) {
-                return $queryBuilder->where('song_name', 'like', '%' . $query . '%');
+                return $queryBuilder->where('song_name', 'like', '%'.$query.'%');
             })
             ->paginate($pagination);
 

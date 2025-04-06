@@ -12,4 +12,3 @@ enum VoteType: string
         return array_column(VoteType::cases(), 'value');
     }
 }
-

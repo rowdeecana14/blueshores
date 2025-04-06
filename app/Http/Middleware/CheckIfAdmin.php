@@ -2,11 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\User\Role;
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
-use App\Enums\User\Role;
+use Symfony\Component\HttpFoundation\Response;
 
 class CheckIfAdmin
 {
@@ -17,8 +17,8 @@ class CheckIfAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-         // Check if the authenticated user is an admin
-         if (Auth::check() && Auth::user()->role == Role::ADMIN) {
+        // Check if the authenticated user is an admin
+        if (Auth::check() && Auth::user()->role == Role::ADMIN) {
             return $next($request);
         }
 

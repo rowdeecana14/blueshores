@@ -2,13 +2,13 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Carbon;
 use App\Enums\User\Active;
 use App\Enums\User\Role;
 use App\Enums\User\Status;
 use App\Models\User;
+use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 
 class InitializeCommand extends Command
@@ -49,19 +49,19 @@ class InitializeCommand extends Command
 
         $this->info('Creating admin user...');
 
-        $password = "superadmin";
+        $password = 'superadmin';
         $user = User::create([
-            'name' => "Superadmin",
-            'email' => "superadmin@gmail.com",
+            'name' => 'Superadmin',
+            'email' => 'superadmin@gmail.com',
             'email_verified' => Carbon::now(),
             'password' => Hash::make($password),
             'active' => Active::YES,
             'role' => Role::ADMIN,
-            'status' => Status::APPROVED
+            'status' => Status::APPROVED,
         ]);
         $this->newLine();
-        $this->info("Email: " . $user->email);
-        $this->info("Password: " . $password);
+        $this->info('Email: '.$user->email);
+        $this->info('Password: '.$password);
         $this->newLine();
 
         $this->info('Application initialized successfully!');

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Album;
 use App\Models\Vote;
+use Illuminate\Http\Request;
 
 class VoteController extends Controller
 {

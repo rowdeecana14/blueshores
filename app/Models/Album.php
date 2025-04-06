@@ -14,7 +14,7 @@ class Album extends Model
         'title',
         'artist',
         'cover_image',
-        'active'
+        'active',
     ];
 
     public function votes()
