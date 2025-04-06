@@ -43,8 +43,8 @@ The default admin credentials for the backend application are:
 
 Clone the repository to your local machine:
 ```bash
-git clone https://github.com/yourusername/music-vote-tracking.git
-cd music-vote-tracking
+git clone https://github.com/rowdeecana14/blueshores.git
+cd blueshores
 ```
 
 ### Step 2: Set Up Environment
