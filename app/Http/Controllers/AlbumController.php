@@ -31,7 +31,14 @@ class AlbumController extends Controller
             )
             ->leftJoin('votes', 'votes.album_id', '=', 'albums.id')
             ->where('active', Active::YES)
-            ->groupBy('albums.id')
+            ->groupBy(
+                'albums.id',
+                'albums.user_id',
+                'albums.song_name',
+                'albums.created_at',
+                'albums.updated_at',
+                'albums.deleted_at'
+            )
             ->orderBy('total_votes', 'desc')
             ->orderBy('song_name', 'asc')
             ->when($query, function ($queryBuilder) use ($query) {
