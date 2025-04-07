@@ -8,6 +8,7 @@ use App\Enums\Vote\VoteType;
 use App\Models\Album;
 use App\Models\Vote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -20,30 +21,27 @@ class AlbumController extends Controller
         $pagination = 12;
         $is_admin = $auth->role === Role::ADMIN->value;
 
-        $albums = Album::select('albums.*')
+        $voteStatsSubquery = DB::table('votes')
             ->selectRaw('
-                COUNT(CASE WHEN votes.vote = "up" THEN 1 END) - COUNT(CASE WHEN votes.vote = "down" THEN 1 END) AS total_votes
-            ')
-            ->selectRaw(
-                '
-             MAX(CASE WHEN votes.user_id = ? THEN votes.vote END) AS user_vote',
-                [$auth->id]
-            )
-            ->leftJoin('votes', 'votes.album_id', '=', 'albums.id')
-            ->where('active', Active::YES)
-            ->groupBy(
-                'albums.id',
-                'albums.user_id',
-                'albums.song_name',
-                'albums.created_at',
-                'albums.updated_at',
-                'albums.deleted_at'
-            )
-            ->orderBy('total_votes', 'desc')
-            ->orderBy('song_name', 'asc')
-            ->when($query, function ($queryBuilder) use ($query) {
-                return $queryBuilder->where('song_name', 'like', '%'.$query.'%');
+                album_id,
+                COUNT(CASE WHEN vote = "up" THEN 1 END) -
+                COUNT(CASE WHEN vote = "down" THEN 1 END) AS total_votes,
+                MAX(CASE WHEN user_id = ? THEN vote END) AS user_vote
+            ', [$auth->id])
+            ->groupBy('album_id');
+
+        $albums = Album::query()
+            ->leftJoinSub($voteStatsSubquery, 'vote_stats', function ($join) {
+                $join->on('albums.id', '=', 'vote_stats.album_id');
             })
+            ->select('albums.*')
+            ->addSelect('vote_stats.total_votes', 'vote_stats.user_vote')
+            ->where('albums.active', Active::YES)
+            ->when($query, function ($q) use ($query) {
+                return $q->where('albums.song_name', 'like', '%' . $query . '%');
+            })
+            ->orderByDesc('vote_stats.total_votes')
+            ->orderBy('albums.song_name')
             ->paginate($pagination);
 
         return Inertia::render('Dashboard', [

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\Album\Active;
 use App\Models\Album;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -15,25 +16,26 @@ class HomeController extends Controller
         $query = $request->input('query', '');
         $pagination = 12;
 
-        $albums = Album::select('albums.*')
+        $voteStatsSubquery = DB::table('votes')
             ->selectRaw('
-                COUNT(CASE WHEN votes.vote = "up" THEN 1 END) - COUNT(CASE WHEN votes.vote = "down" THEN 1 END) AS total_votes
+                album_id,
+                COUNT(CASE WHEN vote = "up" THEN 1 END) -
+                COUNT(CASE WHEN vote = "down" THEN 1 END) AS total_votes
             ')
-            ->leftJoin('votes', 'votes.album_id', '=', 'albums.id')
-            ->where('active', Active::YES)
-            ->groupBy(
-                'albums.id',
-                'albums.user_id',
-                'albums.song_name',
-                'albums.created_at',
-                'albums.updated_at',
-                'albums.deleted_at'
-            )
-            ->orderBy('total_votes', 'desc')
-            ->orderBy('song_name', 'asc')
-            ->when($query, function ($queryBuilder) use ($query) {
-                return $queryBuilder->where('song_name', 'like', '%'.$query.'%');
+            ->groupBy('album_id');
+
+        $albums = Album::query()
+            ->leftJoinSub($voteStatsSubquery, 'vote_stats', function ($join) {
+                $join->on('albums.id', '=', 'vote_stats.album_id');
             })
+            ->select('albums.*')
+            ->addSelect('vote_stats.total_votes')
+            ->where('albums.active', Active::YES)
+            ->when($query, function ($q) use ($query) {
+                return $q->where('albums.song_name', 'like', '%' . $query . '%');
+            })
+            ->orderByDesc('vote_stats.total_votes')
+            ->orderBy('albums.song_name')
             ->paginate($pagination);
 
         return Inertia::render('Welcome', [
